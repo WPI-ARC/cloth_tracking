@@ -26,14 +26,21 @@ Notes on Operation
 
 	Once the program compiles and connects to the kinect it will follow the following steps.
 	1. Console will open along with some blank openCV windows.
+
 	2. The program will wait for input. 
+
 	3. When input is given an 8sec countdown will begin.
 		-This is meant to give you time to hold a cloth as in the example videos.
+
 	4. When the countdown is complete the program will begin searing for the cloth by looking for all the marked points to be detected.
+	
 	5. When all points are detected a mesh will be overlaid on the cloth. 
 		-At this point all the points are being tracked.
+	
 	6. You may begin to move the cloth and see some deformation.
+	
 	7. If the python code is set up for use, a 3d graph of the 3dTPS expectation will appear. This will be very noisy and is not meant to represent the final mesh for analysis. 
+	
 	8. In the videos a 3d representation of the mesh is plotted with matlab. This was done by exporting the mesh data to a CSV file along with time stamps by frame. This data can then be plotted in matlab. 
 			-Alternatively the data could be pushed to matlab or python in real time. 
 			 This would be similar to the 3d tps python system. 
