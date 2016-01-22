@@ -1,4 +1,65 @@
 ========================================================================
+	CLOTH TRACKING WITH MICROSOFT KINECT AND OPENCV
+	Initial Author: Michael McConnell
+========================================================================
+Before working on the project please review some of the videos below to understand how the output works.
+	https://www.youtube.com/watch?v=KVIj2ylCRNI&list=PLu5VCNX1FuYyheZNEcz6NQrOL3ggEMHZw
+
+Project Methodology Overview
+	https://www.dropbox.com/s/rx6r2yvhd78zcsm/cloth-deformation-tracking.pdf?dl=0
+
+	To gain a high level understanding of how the project is supposed to function please read the paper above.
+
+Notes on Operation
+	The poject requires the folling components.
+	1. Microsoft Kinect v1
+	2. Cloth with easily visible circular markers on it in a rectangular pattern.
+	3. Microsoft Windows
+	4. OpenCV 3.0
+	5. Microsoft Kinect SDK v1.8
+	6. Python 2.7 (If using the experimental 3d TPS)
+	7. Visual Studio 2015 (Not really required but it was written in this.)
+
+	The program was written for Microsoft Windows, but ideally the method could be transferred to a ROS platform.
+	This would allow it to function on a robotic system.
+
+	To run the code you will need to link the OpenCV libraries with your IDE. Similarly the tpyPython.py file
+	will need to be imported to your python install. This can be done by moving it into the Lib folder of the Python
+	folder. The Kinect SDK will also need to be properly installed on the system and added to your IDE. There is 
+	a path to a template file in the code that also needs to be changed to a picture of your template cloth image.
+
+	Once the program compiles and connects to the kinect it will follow the following steps.
+	1. Console will open along with some blank openCV windows.
+	2. The program will wait for input. 
+	3. When input is given an 8sec countdown will begin.
+		-This is meant to give you time to hold a cloth as in the example videos.
+	4. When the countdown is complete the program will begin searing for the cloth by looking for all the marked points
+		to be detected.
+	5. When all points are detected a mesh will be overlaid on the cloth. 
+		-At this point all the points are being tracked.
+	6. You may begin to move the cloth and see some deformation.
+	7. If the python code is set up for use, a 3d graph of the 3dTPS expectation will appear. This will be very noisy
+		and is not meant to represent the final mesh for analysis. 
+	8. In the videos a 3d representation of the mesh is plotted with matlab. This was done by exporting the mesh data
+		to a CSV file along with time stamps by frame. This data can then be plotted in matlab. 
+			-Alternatively the data could be pushed to matlab or python in real time. 
+			 This would be similar to the 3d tps python system. 
+	
+	Another note. 
+		The program currently does not process the template image at run time. The user instead enters the point’s locations in order
+		from left to right then top to bottom. 1 2 3
+											   4 5 6
+											   7 8 9
+		To automate it some code must be written to scan the image to preserve this ordering when the template is 
+		processed at start up.
+
+		The filtering on the image will also need to be adjusted based on the lighting conditions of the room.
+		This can be done in the filterImage function. 
+
+		If you would like clarification on something feel free to email me (Michael McConnell) at 
+		msmcconnell@wpi.edu
+
+========================================================================
     CONSOLE APPLICATION : KinectOpenCV Project Overview
 ========================================================================
 
