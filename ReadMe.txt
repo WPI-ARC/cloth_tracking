@@ -6,7 +6,8 @@ Before working on the project please review some of the videos below to understa
 	https://www.youtube.com/watch?v=KVIj2ylCRNI&list=PLu5VCNX1FuYyheZNEcz6NQrOL3ggEMHZw
 
 Project Methodology Overview
-	https://www.dropbox.com/s/rx6r2yvhd78zcsm/cloth-deformation-tracking.pdf?dl=0
+	There is a PDF stored as an issue in this repo. To access it click on the issues tab and then click the Project Paper issue. 
+	A download is available in the description.
 
 	To gain a high level understanding of how the project is supposed to function please read the paper above.
 
