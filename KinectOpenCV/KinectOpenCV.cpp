@@ -80,6 +80,8 @@ void updateMeshInitial(cv::Ptr<cv::ThinPlateSplineShapeTransformer>& tpsWarp, Me
 void assignDepthToMesh(Mesh& mesh, const cv::Mat& depthFrame);
 /** \brief Assigns the depth information to a mesh with a frame count*/
 void assignDepthToMesh(Mesh& mesh, const cv::Mat& depthFrame, int frameCount);
+
+void display2DTPSRawDepthInPython(Mesh& mesh, PyObject* function);
 /** Builds a python object representing the tacked control points of the mesh from a vector of those control points.
 	@param vec A vector of the 3d locations of the control points used for TPS warping.
 	@return A python list object containing the same data.
@@ -130,8 +132,8 @@ PyObject* buildPythonMeshForAxis(Mesh& mesh, int axis)
 	*/
 void updateMeshTPS3D(Mesh& mesh, vector<cv::Vec3f> meshControlNew, vector<cv::DMatch> goodMatches, PyObject* function)
 {
-	cout << "Size of meshControlNew = " << meshControlNew.size() << endl;
-	cout << "GoodMatches Are" << endl;
+	//cout << "Size of meshControlNew = " << meshControlNew.size() << endl;
+	//cout << "GoodMatches Are" << endl;
 	for (int i = 0; i < goodMatches.size(); i++)
 	{
 		cout << "(a,b) = ( " << goodMatches[i].queryIdx << " , " << goodMatches[i].trainIdx<< " )" << endl;
@@ -156,10 +158,10 @@ void updateMeshTPS3D(Mesh& mesh, vector<cv::Vec3f> meshControlNew, vector<cv::DM
 			}
 		}
 	}
-	cout << "The old control Points are" << endl;
+	//cout << "The old control Points are" << endl;
 	for (int i = 0; i < oldPoints.size(); i++)
 	{
-		cout << "(x,y,z) = ( " << oldPoints[i][0] << " , " << oldPoints[i][1] << " , " << oldPoints[i][2] << " )" << endl;
+		//cout << "(x,y,z) = ( " << oldPoints[i][0] << " , " << oldPoints[i][1] << " , " << oldPoints[i][2] << " )" << endl;
 	}
 	PyObject* oldControlPoints = buildPythonControlListFromVector(oldPoints);
 
@@ -175,10 +177,10 @@ void updateMeshTPS3D(Mesh& mesh, vector<cv::Vec3f> meshControlNew, vector<cv::DM
 			}
 		}
 	}
-	cout << "The new control Points are" << endl;
+	//cout << "The new control Points are" << endl;
 	for (int i = 0; i < newPoints.size(); i++)
 	{
-		cout << "(x,y,z) = ( " << newPoints[i][0] << " , " << newPoints[i][1] << " , " << newPoints[i][2] << " )" << endl;
+		//cout << "(x,y,z) = ( " << newPoints[i][0] << " , " << newPoints[i][1] << " , " << newPoints[i][2] << " )" << endl;
 	}
 	PyObject* newControlPoints = buildPythonControlListFromVector(newPoints);
 	PyObject* xMesh = buildPythonMeshForAxis(mesh, 0);
@@ -187,7 +189,7 @@ void updateMeshTPS3D(Mesh& mesh, vector<cv::Vec3f> meshControlNew, vector<cv::DM
 
 	if (PyCallable_Check(function))
 	{
-		cout << "The function is callable" << endl;
+		//cout << "The function is callable" << endl;
 	}
 	else
 	{
@@ -209,7 +211,19 @@ void updateMeshTPS3D(Mesh& mesh, vector<cv::Vec3f> meshControlNew, vector<cv::DM
 		cout << "The function is = " << function;
 	}
 }
+void display2DTPSRawDepthInPython(Mesh& mesh, PyObject* function)
+{
+	PyObject* X_mesh = buildPythonMeshForAxis(mesh, 0);
+	PyObject* Y_mesh = buildPythonMeshForAxis(mesh, 1);
+	PyObject* Z_mesh = buildPythonMeshForAxis(mesh, 2);
 
+	PyObject* pArgs = PyTuple_New(3);
+	PyTuple_SetItem(pArgs, 0, X_mesh);
+	PyTuple_SetItem(pArgs, 1, Y_mesh);
+	PyTuple_SetItem(pArgs, 2, Z_mesh);
+	PyObject* result = PyObject_CallObject(function, pArgs);
+
+}
 /** The main execution function*/
 int main(int argc, char** argv)
 {
@@ -220,6 +234,16 @@ int main(int argc, char** argv)
 	PyObject* myModule = PyImport_Import(myModuleString); //Import module
 	PyObject* function;
 	function = PyObject_GetAttrString(myModule, (char*)"displayWarp"); //Get function from module
+	PyObject* displayFunction;
+	displayFunction = PyObject_GetAttrString(myModule, (char*)"display2DWarpWithDepth"); //Get function from module
+	if (displayFunction && PyCallable_Check(displayFunction)) //Call the function with the provided paramaters.
+	{
+		cout << "Hello we have Dfunction" << endl;
+	}
+	if (function && PyCallable_Check(function)) //Call the function with the provided paramaters.
+	{
+		cout << "Hello we have   function" << endl;
+	}
 	PyObject* initFunction = PyObject_GetAttrString(myModule, (char*)"init"); //Get function from module
 	PyObject* result = PyObject_CallObject(initFunction, PyTuple_New(0));
 
@@ -401,7 +425,7 @@ int main(int argc, char** argv)
 
 				assignDepthToMesh(mesh, depthFrame, frameCount); //Add depth data to mesh
 				vector<cv::Vec3f> newControlPointTPS;
-				cout << "Mesh control INdex size = " << mesh.controlIndex.size() << endl;
+				//cout << "Mesh control INdex size = " << mesh.controlIndex.size() << endl;
 				for (int i = 0; i < mesh.controlIndex.size(); i++) //Get the control points last location
 				{
 
@@ -409,8 +433,10 @@ int main(int argc, char** argv)
 					newControlPointTPS.push_back(cv::Vec3f(meshControlNew.at(i).x, meshControlNew.at(i).y, mesh.at(loc[0], loc[1])[2]));
 				}
 
-				updateMeshTPS3D(mesh, newControlPointTPS, good_matches, function); //Run the mesh update functions for the 3d TPS with python
+				//updateMeshTPS3D(mesh, newControlPointTPS, good_matches, function); //Run the mesh update functions for the 3d TPS with python
+				
 				updateMeshInitial(myTPS, mesh, meshControlNew, good_matches); //Update mesh with 2d tps in opencv
+				display2DTPSRawDepthInPython(mesh, displayFunction);
 
 				mesh.drawMesh(frame);
 			

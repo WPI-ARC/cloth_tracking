@@ -4,23 +4,6 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import pylab as p
 
-'''
-Function Not use 
-def plotTPS(XYZ, gridPoints, subplot):
-    GRID_POINTS = gridPoints
-    x_min = XYZ[:,0].min()
-    x_max = XYZ[:,0].max()
-    y_min = XYZ[:,1].min()
-    y_max = XYZ[:,1].max()
-    xi = np.linspace(x_min, x_max, GRID_POINTS)
-    yi = np.linspace(y_min, y_max, GRID_POINTS)
-    XI, YI = np.meshgrid(xi, yi)
-    rbf = Rbf(XYZ[:,0],XYZ[:,1],XYZ[:,2],function='thin-plate',smooth=0.0)
-    ZI = rbf(XI,YI)
-
-    subplot.plot_wireframe(XI, YI, ZI)
-    subplot.scatter(XYZ[:,0],XYZ[:,1],XYZ[:,2], 'z', 40, 'r', True)
-    '''
 # Takes in a set of old control points and a set of new control points.
 # The function then calculates the TPS interpolation for the Delta X, Delta Y, and Delta Z with respect to the X,Y for each pair of control points.
 # The function returns 3 radial basis functions that can be used to calculate the dX, dY,dZ for any other point (x,y)   
@@ -49,9 +32,20 @@ def warpPoints(XYZ_old, XYZ_new, X, Y, Z):
     return xi, yi, zi
 #Function that needs to be called to set up the plotting system. (NO LONGER NEEDED)
 def init():
-    global fig, subplot
+    global fig, fig2, subplot, subplot2
     fig = plt.figure()
+    fig2 = plt.figure()
     subplot = fig.add_subplot(1,1,1, projection='3d', adjustable='box', aspect=1)
+    subplot2 = fig2.add_subplot(1,1,1, projection='3d', adjustable='box', aspect=1)
+    
+    subplot2.set_title('Graphs of 3d expected TPS and 2d TPS with raw depth data')
+    subplot2.set_xlabel('X in Pixels')
+    subplot2.set_ylabel('Y in Pixels')
+    subplot2.set_zlabel('Z in mm')
+    subplot2.set_xlim(0, 800)    
+    subplot2.set_ylim(0, 800)
+    subplot2.set_zlim(700, 2000)
+    subplot2.set_aspect(2)
     return 1
 #Function that can be called from an external program and will display the 3d tps warped mesh that the corresponding data would create.
 #The intent of this is that the function could be modified to return the data for use as an expectation that the cloth data could be checked against. 
@@ -90,39 +84,28 @@ def displayWarp(XYZ_old, XYZ_new, X_m, Y_m, Z_m):
     return 1
 
 
+def display2DWarpWithDepth(X_m, Y_m, Z_m):
+    global fig2, subplot2
+    #fig = plt.figure()
+    
+    subplot2.clear()
+    subplot2.scatter(X_m,Y_m,Z_m, 'z', 40, 'g', True)
+    subplot2.plot_wireframe(X_m, Y_m, Z_m)
+    
+    
+    fig2.canvas.draw()
+    plt.show(block=False)
+    return 1
+'''    
+init()
+x = np.array([[0,1,2],
+              [0,1,2],
+              [0,1,2]])
+y = np.array([[0,0,0],
+              [1,1,1],
+              [2,2,2]])
+z = np.array([[0,1,0],
+              [0,0,0],
+              [0,2,0]])
+display2DWarpWithDepth(x, y, z)
 '''
-XYZ = np.array([[100, 100,  0],
-			[150, 100,  0],
-			[200, 100,  0],
-			[100, 150,  0],
-			[150, 150, 0],
-			[200, 150, 0],
-			[100, 200,  0],
-			[150, 200, 0],
-			[200, 200, 0]
-			])
-XYZ2 = np.array([[120, 100,  0],
-			[150, 130,  10],
-			[180, 100,  0],
-			[115, 150,  0],
-			[150, 175, 10],
-			[185, 150, 0],
-			[115, 210,  0],
-			[150, 215, 10],
-			[183, 210, 0]
-			])
-displayWarp(XYZ, XYZ2)
-'''
-#XYZ3 = np.concatenate((XYZ[:,[0]], XYZ[:,[1]], (XYZ2[:,[2]] - XYZ[:,[2]])), axis=1)
-#XYZ3 = XYZ[:,0] + XYZ[:,1] + (XYZ2[:,2] - XYZ[:,2])
-
-
-
-
-
-
-
-
-
-
-
