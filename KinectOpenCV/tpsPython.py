@@ -38,14 +38,7 @@ def init():
     subplot = fig.add_subplot(1,1,1, projection='3d', adjustable='box', aspect=1)
     subplot2 = fig2.add_subplot(1,1,1, projection='3d', adjustable='box', aspect=1)
     
-    subplot2.set_title('Graphs of 3d expected TPS and 2d TPS with raw depth data')
-    subplot2.set_xlabel('X in Pixels')
-    subplot2.set_ylabel('Y in Pixels')
-    subplot2.set_zlabel('Z in mm')
-    subplot2.set_xlim(0, 800)    
-    subplot2.set_ylim(0, 800)
-    subplot2.set_zlim(700, 2000)
-    subplot2.set_aspect(2)
+    
     return 1
 #Function that can be called from an external program and will display the 3d tps warped mesh that the corresponding data would create.
 #The intent of this is that the function could be modified to return the data for use as an expectation that the cloth data could be checked against. 
@@ -89,9 +82,17 @@ def display2DWarpWithDepth(X_m, Y_m, Z_m):
     #fig = plt.figure()
     
     subplot2.clear()
-    subplot2.scatter(X_m,Y_m,Z_m, 'z', 40, 'g', True)
+    #subplot2.scatter(X_m,Y_m,Z_m, 'z', 40, 'g', True)
     subplot2.plot_wireframe(X_m, Y_m, Z_m)
     
+    subplot2.set_title('Graphs of 2d TPS with Raw Depth Data')
+    subplot2.set_xlabel('X in Pixels')
+    subplot2.set_ylabel('Y in Pixels')
+    subplot2.set_zlabel('Z in mm')
+    subplot2.set_xlim(50, 500)    
+    subplot2.set_ylim(100, 700)
+    subplot2.set_zlim(400, 1800)
+    subplot2.set_aspect(1)
     
     fig2.canvas.draw()
     plt.show(block=False)

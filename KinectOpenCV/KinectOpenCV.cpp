@@ -423,7 +423,7 @@ int main(int argc, char** argv)
 				}
 
 
-				assignDepthToMesh(mesh, depthFrame, frameCount); //Add depth data to mesh
+				
 				vector<cv::Vec3f> newControlPointTPS;
 				//cout << "Mesh control INdex size = " << mesh.controlIndex.size() << endl;
 				for (int i = 0; i < mesh.controlIndex.size(); i++) //Get the control points last location
@@ -436,6 +436,8 @@ int main(int argc, char** argv)
 				//updateMeshTPS3D(mesh, newControlPointTPS, good_matches, function); //Run the mesh update functions for the 3d TPS with python
 				
 				updateMeshInitial(myTPS, mesh, meshControlNew, good_matches); //Update mesh with 2d tps in opencv
+				
+				assignDepthToMesh(mesh, depthFrame, frameCount); //Add depth data to mesh
 				display2DTPSRawDepthInPython(mesh, displayFunction);
 
 				mesh.drawMesh(frame);
