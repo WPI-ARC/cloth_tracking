@@ -42,12 +42,12 @@ Notes on Operation
 	
 	7. If the python code is set up for use, a 3d graph of the 3dTPS expectation will appear. This will be very noisy and is not meant to represent the final mesh for analysis. 
 	
-	8. In the videos a 3d representation of the mesh is plotted with matlab. This was done by exporting the mesh data to a CSV file along with time stamps by frame. This data can then be plotted in matlab. 
-			-Alternatively the data could be pushed to matlab or python in real time. 
-			 This would be similar to the 3d tps python system. 
+	8. When tracking the cloth a 3D python plot of the 2D TPS and Raw Despth data will appear. This is running off of the same file as the 3D TPS python file. The particular function that is being called is the display2DWarpWithDepth(X_m, Y_m, Z_m) python function. 	
+	-In the videos a 3d representation of the mesh is plotted with matlab. This was done by exporting the mesh data to a CSV file along with time stamps by frame. This data can then be plotted in matlab. This is functionally the same as the new python plotting. Except the python plot will update in real time. 
+
 	
 	Another note. 
-		The program currently does not process the template image at run time. The user instead enters the point’s locations in order from left to right then top to bottom. 
+		The program currently does not process the template image at run time. The user instead enters the pointâ€™s locations in order from left to right then top to bottom. 
 		1 2 3
 		4 5 6
 		7 8 9
